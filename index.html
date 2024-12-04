@@ -5,57 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gift Recommender</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 20px auto;
-        }
-        .question {
-            margin: 20px 0;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            color: white;
-            background-color: #0088cc;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #005f99;
-        }
-        .recommendations {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Gift Recommender!</h1>
-        <img id="avatar" class="avatar" src="" alt="User Avatar">
-        <p id="user-info">Loading...</p>
+        <div class="header">
+            <img id="avatar" class="avatar" src="" alt="User Avatar">
+            <h1>Welcome to Gift Recommender!</h1>
+            <p id="user-info">Loading...</p>
+        </div>
         <div id="quiz">
             <p class="question">What are your interests?</p>
             <button class="btn" onclick="selectInterest('technology')">Technology</button>
@@ -72,7 +30,14 @@
         // Инициализация приложения
         tg.ready();
         const user = tg.initDataUnsafe?.user || {};
-        document.getElementById('avatar').src = user.photo_url || 'https://via.placeholder.com/100';
+        
+        // Если есть фото пользователя, то вставляем его в аватар
+        if (user.photo_url) {
+            document.getElementById('avatar').src = user.photo_url;
+        } else {
+            document.getElementById('avatar').src = 'https://via.placeholder.com/100'; // Заменитель для случая, если фото нет
+        }
+
         document.getElementById('user-info').textContent = `Hello, ${user.first_name || 'Guest'}!`;
 
         function selectInterest(interest) {
