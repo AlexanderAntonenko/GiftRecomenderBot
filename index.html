@@ -30,7 +30,7 @@
         // Инициализация приложения
         tg.ready();
         const user = tg.initDataUnsafe?.user || {};
-        
+
         // Если есть фото пользователя, то вставляем его в аватар
         if (user.photo_url) {
             document.getElementById('avatar').src = user.photo_url;
@@ -78,6 +78,7 @@
             sendButton.textContent = 'Send to Telegram';
             sendButton.className = 'btn';
             sendButton.onclick = () => {
+                // Отправляем данные обратно в Telegram через WebApp
                 tg.sendData(JSON.stringify(recommendations));
             };
             recommendationsDiv.appendChild(sendButton);
