@@ -19,12 +19,9 @@
      
     <script>
     function onTelegramAuth(user) {
-        // Отправляем данные на сервер
-        fetch('https://3326-46-53-254-144.ngrok-free.app/auth', {  // Укажите ваш URL
+        fetch('https://3326-46-53-254-144.ngrok-free.app/auth', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
         })
         .then(response => response.json())
