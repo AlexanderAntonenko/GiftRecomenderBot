@@ -3,41 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gift Recommender Login</title>
+    <title>Gift Recommender</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 20px auto;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            color: white;
+            background-color: #0088cc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #005f99;
+        }
+        .recommendations {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Gift Recommender</h1>
-    <p>Please login with Telegram to get personalized gift recommendations.</p>
-    
-    <!-- Telegram Login Widget -->
-    <script async src="https://telegram.org/js/telegram-widget.js?22" 
-            data-telegram-login="GiftRecomenderBot" 
-            data-size="large" 
-            data-onauth="onTelegramAuth(user)" 
-            data-request-access="write"></script>
-    
-     
-    <script>
-    function onTelegramAuth(user) {
-        fetch('https://661d-46-53-254-144.ngrok-free.app/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user),
-        })
-        .then(response => response.json())
-        .then(data => {
-        if (data.status === 'success') {
-            alert('Welcome, ' + user.first_name + '! Here are your recommendations: ' + data.recommendations.join(', '));
-        } else {
-            alert('Authentication failed: ' + data.error);
-        }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    </script>
+    <div class="container">
+        <h1>Welcome to Gift Recommender!</h1>
+        <img id="avatar" class="avatar" src="" alt="User Avatar">
+        <p id="user-info">Loading...</p>
+        <div id="quiz">
+            <p class="question">What are your interests?</p>
+            <button class="btn" onclick="selectInterest('technology')">Technology</button>
+            <button class="btn" onclick="selectInterest('sports')">Sports</button>
+            <button class="btn" onclick="selectInterest('art')">Art</button>
+            <button class="btn" onclick="selectInterest('cooking')">Cooking</button>
+        </div>
+        <div id="recommendations" class="recommendations"></div>
+    </div>
 
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        // Инициализация приложения
+        tg.ready();
+        const user = tg.initDataUnsafe?.user || {};
+        document.getElementById('avatar').src = user.photo_url || 'https://via.placeholder.com/100';
+        document.getElementById('user-info').textContent = `Hello, ${user.first_name || 'Guest'}!`;
+
+        function selectInterest(interest) {
+            // Отправляем интерес на сервер
+            fetch('https://4537-46-53-254-144.ngrok-free.app/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user, interest }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showRecommendations(data.recommendations);
+                } else {
+                    alert('Something went wrong: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error sending your data.');
+            });
+        }
+
+        function showRecommendations(recommendations) {
+            document.getElementById('quiz').style.display = 'none';
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = '<h2>Recommended Gifts:</h2>';
+            const list = document.createElement('ul');
+            recommendations.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+                list.appendChild(listItem);
+            });
+            recommendationsDiv.appendChild(list);
+            const sendButton = document.createElement('button');
+            sendButton.textContent = 'Send to Telegram';
+            sendButton.className = 'btn';
+            sendButton.onclick = () => {
+                tg.sendData(JSON.stringify(recommendations));
+            };
+            recommendationsDiv.appendChild(sendButton);
+        }
+    </script>
 </body>
 </html>
-
-
-
