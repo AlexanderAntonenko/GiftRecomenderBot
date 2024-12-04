@@ -16,12 +16,31 @@
             data-onauth="onTelegramAuth(user)" 
             data-request-access="write"></script>
     
+     
     <script>
-      // Обработка данных пользователя после логина
-      function onTelegramAuth(user) {
-        alert('Hello, ' + user.first_name + '! Your Telegram ID is: ' + user.id);
-        // TODO: отправить данные на сервер или показать рекомендации
-      }
+    function onTelegramAuth(user) {
+        // Отправляем данные на сервер
+        fetch('https://your-server-url.com/auth', {  // Укажите ваш URL
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+        })
+        .then(response => response.json())
+        .then(data => {
+        if (data.status === 'success') {
+            alert('Welcome, ' + user.first_name + '! Here are your recommendations: ' + data.recommendations.join(', '));
+        } else {
+            alert('Authentication failed: ' + data.error);
+        }
+        })
+        .catch(error => console.error('Error:', error));
+    }
     </script>
+
 </body>
 </html>
+
+
+
