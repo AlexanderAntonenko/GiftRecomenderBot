@@ -52,7 +52,7 @@
 
         function selectGiftType(giftType) {
             // Отправляем интерес и тип подарка на сервер
-            fetch('http://127.0.0.1:8080/auth', { // Локальный URL, по которому работает Flask
+            fetch('https://7b2b-46-53-254-144.ngrok-free.app/auth', { // Локальный URL, по которому работает Flask
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
