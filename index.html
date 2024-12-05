@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img id="avatar" class="avatar" src="" alt="Аватар пользователя">
+            <img id="avatar" class="avatar" src="" alt="GiftRecommender">
             <h1>Добро пожаловать в Подбор Подарков!</h1>
             <p id="user-info">Загрузка...</p>
         </div>
@@ -38,12 +38,7 @@
         tg.ready();
         const user = tg.initDataUnsafe?.user || {};
 
-        // Если есть фото пользователя, то вставляем его в аватар
-        if (user.photo_url) {
-            document.getElementById('avatar').src = user.photo_url;
-        } else {
-            document.getElementById('avatar').src = 'https://github.com/AlexanderAntonenko/GiftRecomenderBot/blob/main/photo_2024-12-05_01-08-46.jpg'; // Заменитель для случая, если фото нет
-        }
+        document.getElementById('avatar').src = 'https://github.com/AlexanderAntonenko/GiftRecomenderBot/blob/main/photo_2024-12-05_01-08-46.jpg'; // Заменитель для случая, если фото нет
 
         document.getElementById('user-info').textContent = `Здравствуйте, ${user.first_name || 'Гость'}!`;
 
